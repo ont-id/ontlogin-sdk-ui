@@ -72,15 +72,13 @@ _via [js bundle](./dist/ontloginui.min.js):_
 
 ### Api definition
 
-#### Request content type:
+#### url_of_get_challenge:
 
-application/json
+The Api for get challenge with auth request.
 
-#### Resoonse content type:
+_Request/Response content type_
 
-application/json
-
-#### url_of_get_challenge :
+`application/json`
 
 _Request body_
 
@@ -99,6 +97,12 @@ example:
 `{"ver":"1.0","type":"ServerHello","nonce":"8125419d-0ba4-11ec-a4f0-441ca8e37c61","server":{"name":"testServcer","icon":"http://somepic.jpg","url":"https://ont.io","did":"did:ont:sampletest"},"chain":["ONT"],"alg":["ES256"],"VCFilters":[{"type":"EmailCredential","trust_roots":["did:ont:testdid"],"required":true}]}`
 
 #### url_of_submit_response:
+
+The api for submit auth response to server.
+
+_Request/Response content type_
+
+`application/json`
 
 _Request body_
 
