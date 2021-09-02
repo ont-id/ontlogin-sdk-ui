@@ -1,8 +1,14 @@
 # ontlogin-sdk-ui
 
-OntLogin UI SDK for JavaScript provides easy integration for your application to OntLogin.
+OntLogin web component UI SDK for JavaScript provides easy integration for your application to OntLogin.
 
-## Getting Started
+## Before start
+
+- The backend api need to be implemented with defined specification.
+- Check web component compatibility. -> https://caniuse.com/?search=Custom%20Elements
+- Check [ontlogin-sdk-js](https://github.com/ontology-tech/ontlogin-sdk-js) if custom ui is required.
+
+## Getting started
 
 _via NPM [package](https://npmjs.com/package/ontlogin-ui):_
 
@@ -49,20 +55,20 @@ _via [js bundle](./dist/ontloginui.min.js):_
 
 ### Params
 
-| Name                   | Type   | Des                                                          |
-| ---------------------- | ------ | ------------------------------------------------------------ |
-| url_of_get_challenge   | string | Api url of get challenge(implement with api definition below). |
-| url_of_submit_response | string | Api url of submit response(implement with api definition below). |
-| show_vc_list           | string | 'true'\|'false'.Show vc list in dialog if exist.             |
+| Name                   | Type   | Des                                                                 |
+| ---------------------- | ------ | ------------------------------------------------------------------- |
+| url_of_get_challenge   | string | Api url of get challenge(implement with api definition below).      |
+| url_of_submit_response | string | Api url of submit response(implement with api definition below).    |
+| show_vc_list           | string | 'true'\|'false'.Show vc list in dialog if exist.                    |
 | test                   | string | 'true' \| 'false'.Add a button to mock use scan success(test only). |
 
 ### Events
 
-| Name    | Type        | Des                                                          |
-| ------- | ----------- | ------------------------------------------------------------ |
+| Name    | Type        | Des                                                                          |
+| ------- | ----------- | ---------------------------------------------------------------------------- |
 | success | CustomEvent | Submit success callback,with response of url_of_submit_response in e.detail. |
-| error   | CustomEvent | Error callback.                                              |
-| cancel  | CustomEvent | User cancel callback.                                        |
+| error   | CustomEvent | Error callback.                                                              |
+| cancel  | CustomEvent | User cancel callback.                                                        |
 
 ### Api definition
 
@@ -105,3 +111,9 @@ example:
 _Response body_
 
 Anything in json
+
+## Example apps
+
+- [vue](https://github.com/ontology-tech/ontlogin-sdk-ui/tree/main/examples/vue)
+
+- [pure HTML](https://github.com/ontology-tech/ontlogin-sdk-ui/tree/main/examples/html)
