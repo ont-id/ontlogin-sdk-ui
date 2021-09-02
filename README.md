@@ -70,11 +70,11 @@ _via [js bundle](./dist/ontloginui.min.js):_
 | error   | CustomEvent | Error callback.                                                              |
 | cancel  | CustomEvent | User cancel callback.                                                        |
 
-### Api definition
+### Server api definition
 
 #### url_of_get_challenge:
 
-The Api for get challenge with auth request.
+The Server api for get challenge with auth request.
 
 _Request/Response content type_
 
@@ -98,7 +98,7 @@ example:
 
 #### url_of_submit_response:
 
-The api for submit auth response to server.
+The Server api for submit auth response to server.
 
 _Request/Response content type_
 
