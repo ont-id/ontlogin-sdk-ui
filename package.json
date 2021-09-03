@@ -1,6 +1,6 @@
 {
   "name": "ontlogin-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "svelte": "src/ontloginui.js",
   "module": "dist/ontloginui.mjs",
   "main": "dist/ontloginui.js",
