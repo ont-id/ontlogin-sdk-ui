@@ -3,6 +3,7 @@
 <script>
   import logoWhite from "./images/logo_white.svg";
   import logo from "./images/logo.svg";
+  import close from "./images/close.svg";
   import QRCode from "qrcode-svg";
   import { createEventDispatcher } from "svelte";
   import {
@@ -58,6 +59,11 @@
     }
   };
 
+  const closeHandler = () => {
+    dispatch("cancel", null, compoent, dispatcher);
+    hideDialog();
+  };
+
   const testScan = () => {
     postRequest(`http://172.168.3.240:31843/qr-code/challenge/test/${qrId}`); // todo update qr server
   };
@@ -69,6 +75,7 @@
 {#if isDialogShowing}
   <div class="ont-login-qr">
     <div class="box">
+      <img class="close" src={close} alt="Close" on:click={closeHandler} />
       <div>{url_of_get_challenge}{url_of_submit_response}</div>
       <img class="logo" src={logo} alt="ONT ID" />
       <div class="container">
@@ -142,10 +149,19 @@
     font-size: 0;
 
     .box {
+      position: relative;
       background: #ffffff;
       box-shadow: 0px 0px 12px 5px rgba(9, 9, 9, 0.03);
       border-radius: 10px;
       padding: 40px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      cursor: pointer;
     }
 
     .logo {
@@ -171,6 +187,9 @@
       border: 1px solid rgba(0, 0, 0, 0.05);
       border-radius: 8px;
       overflow: hidden;
+      box-sizing: border-box;
+      width: 124px;
+      height: 124px;
     }
 
     .qr__label {
