@@ -809,11 +809,22 @@
     var QRCode = qrcode.exports;
 
     /**
-       * @license
-       * author: yuanzeyu@onchain.com
-       * ontlogin.js v0.0.5
-       * Released under the ISC license.
-       */
+        * Copyright (C) 2021 The ontology Authors
+        * This file is part of The ontology library.
+        *
+        * The ontology is free software: you can redistribute it and/or modify
+        * it under the terms of the GNU Lesser General Public License as published by
+        * the Free Software Foundation, either version 3 of the License, or
+        * (at your option) any later version.
+        *
+        * The ontology is distributed in the hope that it will be useful,
+        * but WITHOUT ANY WARRANTY; without even the implied warranty of
+        * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        * GNU Lesser General Public License for more details.
+        *
+        * You should have received a copy of the GNU Lesser General Public License
+        * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
+        */
 
     var Version;
     (function (Version) {
@@ -846,26 +857,48 @@
         QrStatus[QrStatus["Success"] = 1] = "Success";
         QrStatus[QrStatus["Fail"] = 2] = "Fail";
     })(QrStatus || (QrStatus = {}));
+    /**
+     * Ontlogin QR server urls.
+     * @beta
+     */
     var RequestUrl;
     (function (RequestUrl) {
-        RequestUrl["getQr"] = "http://172.168.3.240:31843/qr-code/challenge";
-        RequestUrl["getQrResult"] = "http://172.168.3.240:31843/qr-code/result";
+        RequestUrl["getQR"] = "http://172.168.3.240:31843/qr-code/challenge";
+        RequestUrl["getQRResult"] = "http://172.168.3.240:31843/qr-code/result";
     })(RequestUrl || (RequestUrl = {}));
 
+    /**
+     * Post request in json, a simple wrapper of fetch.
+     * @typeParam T Response type.
+     * @param url Request url.
+     * @param body Request body.
+     * @return Promise response.
+     */
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-    const postRequest = async (url, params) => {
+    const postRequest = async (url, body) => {
         return fetch(url, {
             method: "post",
-            body: JSON.stringify(params),
+            body: JSON.stringify(body),
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
         }).then((res) => res.json());
     };
+    /**
+     * Get request in json, a simple wrapper of fetch.
+     * @typeParam T Response type.
+     * @param url Request url.
+     * @param path Request path i.e. 'id' or 'news/id'.
+     * @return Promise response.
+     */
     const getRequest = async (url, path) => {
         return fetch(`${url}/${path}`).then((res) => res.json());
     };
+    /**
+     * Async wait some time.
+     * @param time Second amount.
+     */
     const wait = (time) => {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -875,13 +908,15 @@
     };
 
     /**
-     * Create AuthRequest
-     * @desc Refer to https://ontology-1.gitbook.io/ont-login/tutorials/get-started#send-authentication-request
-     * @param action - Action 0-IdAuth 1-IdAuth and VcAuth
-     * @returns AuthRequest
-     * @beta
+     * Create AuthRequest.
+     * @param action - The action type.
+     * @return The AuthRequest for get AuthChallenge.
+     * @example
+     * ```typescript
+     * const authRequest: AuthRequest = createAuthRequest(Action.IdAuthAndVcAuth);
+     * ```
      */
-    const createAuthRequest = (action) => {
+    const createAuthRequest = (action = Action.IdAuth) => {
         return {
             ver: Version.Version1,
             type: MessageType.ClientHello,
@@ -889,13 +924,16 @@
         };
     };
     /**
-     * Get QR with AuthChallenge
-     * @param challenge - AuthChallenge
-     * @returns QR Text and QR id
-     * @beta
+     * Get QR with the AuthChallenge from ontologin QR server.
+     * @param challenge - The AuthChallenge from your server.
+     * @return Text for generating the QR code and id for query scan result.
+     * @example
+     * ```typescript
+     * const { text, id } = await requestQR(challenge);
+     * ```
      */
     const requestQR = async (challenge) => {
-        const { result, error, desc } = await postRequest(RequestUrl.getQr, challenge);
+        const { result, error, desc } = await postRequest(RequestUrl.getQR, challenge);
         if (error) {
             throw new Error(desc);
         }
@@ -905,15 +943,13 @@
         };
     };
     /**
-     * Query QR result
-     * @desc Fetch QR result until get result or error
-     * @param id - QR id
-     * @param duration - Time duration between each request
-     * @returns ChallengeResponse, refer to doc-url-to-ChallengeResponse
-     * @beta
+     * Query QR result from ontlogin QR server until get result or error.
+     * @param id - QR id.
+     * @param duration - Time duration(ms) between each request(1000 by default).
+     * @return The AuthResponse for submit to server.
      */
     const queryQRResult = async (id, duration = 1000) => {
-        const { result, error, desc } = await getRequest(RequestUrl.getQrResult, id);
+        const { result, error, desc } = await getRequest(RequestUrl.getQRResult, id);
         if (error) {
             throw new Error(desc);
         }
@@ -943,7 +979,7 @@
       );
     };
 
-    /* src/OntLogin.svelte generated by Svelte v3.42.4 */
+    /* src/OntLogin.svelte generated by Svelte v3.42.5 */
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();

@@ -2,10 +2,10 @@
 import "ontlogin-ui";
 
 const successHandler = (e) => {
-  console.log(e.detail);
+  console.log("success", e.detail);
 };
 const errorHandler = (e) => {
-  console.log(e.detail);
+  console.log("fail", e.detail);
 };
 </script>
 
@@ -14,10 +14,9 @@ const errorHandler = (e) => {
     <div>
       <span class="label">Register/Log in with</span>
       <ont-login
-        url_of_get_challenge="http://192.168.0.189:3000/requestChallenge"
-        url_of_submit_response="http://192.168.0.189:3000/submitChallenge"
+        url_of_get_challenge="http://172.168.3.38:3000/requestChallenge"
+        url_of_submit_response="http://172.168.3.38:3000/submitChallenge"
         show_vc_list="true"
-        test="true"
         @success="successHandler"
         @error="errorHandler"
       />
