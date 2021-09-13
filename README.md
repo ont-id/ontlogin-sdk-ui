@@ -55,12 +55,13 @@ _via [js bundle](./dist/ontloginui.min.js):_
 
 ### Params
 
-| Name                   | Type   | Des                                                                 |
-| ---------------------- | ------ | ------------------------------------------------------------------- |
-| url_of_get_challenge   | string | Api url of get challenge(implement with api definition below).      |
-| url_of_submit_response | string | Api url of submit response(implement with api definition below).    |
-| show_vc_list           | string | 'true'\|'false'.Show vc list in dialog if exist.                    |
+| Name                   | Type   | Des                                                          |
+| ---------------------- | ------ | ------------------------------------------------------------ |
+| url_of_get_challenge   | string | Api url of get challenge(implement with api definition below). |
+| url_of_submit_response | string | Api url of submit response(implement with api definition below). |
+| show_vc_list           | string | 'true'\|'false'.Show vc list in dialog if exist.             |
 | test                   | string | 'true' \| 'false'.Add a button to mock use scan success(test only). |
+| action                 | string | '0' \| '1'. Action type in string,Refer to action of [authentication-request](https://docs.ont.io/decentralized-identity-and-data/ontid/ont-login/protocol-specification#authentication-request) . |
 
 ### Events
 

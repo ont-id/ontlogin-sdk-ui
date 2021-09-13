@@ -17,6 +17,7 @@ const errorHandler = (e) => {
         url_of_get_challenge="http://172.168.3.38:3000/requestChallenge"
         url_of_submit_response="http://172.168.3.38:3000/submitChallenge"
         show_vc_list="true"
+        action="1"
         @success="successHandler"
         @error="errorHandler"
       />

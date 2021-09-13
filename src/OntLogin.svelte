@@ -18,6 +18,7 @@
   export let url_of_get_challenge = "";
   export let url_of_submit_response = "";
   export let show_vc_list = "true";
+  export let action = "0"; // action string
   export let test = "false"; // show a buttion to mock user scan success
 
   const compoent = get_current_component();
@@ -34,7 +35,7 @@
   const showDialog = async () => {
     try {
       isDialogShowing = true;
-      const request = createAuthRequest(0);
+      const request = createAuthRequest(Number(action));
       const challenge = await postRequest(url_of_get_challenge, request);
       if (challenge.VCFilters) {
         authList = challenge.VCFilters.map((item) => ({

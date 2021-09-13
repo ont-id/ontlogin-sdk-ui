@@ -977,11 +977,11 @@ const dispatch = (name, detail, component, svelteDispatch) => {
 
 function get_each_context(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[14] = list[i];
+	child_ctx[15] = list[i];
 	return child_ctx;
 }
 
-// (75:0) {#if isDialogShowing}
+// (76:0) {#if isDialogShowing}
 function create_if_block(ctx) {
 	let div6;
 	let div5;
@@ -1109,7 +1109,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (87:10) {#if test === "true"}
+// (88:10) {#if test === "true"}
 function create_if_block_2(ctx) {
 	let button;
 	let mounted;
@@ -1138,7 +1138,7 @@ function create_if_block_2(ctx) {
 	};
 }
 
-// (93:8) {#if show_vc_list === "true" && authList.length}
+// (94:8) {#if show_vc_list === "true" && authList.length}
 function create_if_block_1(ctx) {
 	let ul;
 	let each_value = /*authList*/ ctx[6];
@@ -1196,13 +1196,13 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (95:12) {#each authList as auth}
+// (96:12) {#each authList as auth}
 function create_each_block(ctx) {
 	let li;
 	let div0;
 	let t0;
 	let div1;
-	let t1_value = `${/*auth*/ ctx[14].label}${/*auth*/ ctx[14].optional ? " (Optional)" : ""}` + "";
+	let t1_value = `${/*auth*/ ctx[15].label}${/*auth*/ ctx[15].optional ? " (Optional)" : ""}` + "";
 	let t1;
 	let t2;
 
@@ -1227,7 +1227,7 @@ function create_each_block(ctx) {
 			append(li, t2);
 		},
 		p(ctx, dirty) {
-			if (dirty & /*authList*/ 64 && t1_value !== (t1_value = `${/*auth*/ ctx[14].label}${/*auth*/ ctx[14].optional ? " (Optional)" : ""}` + "")) set_data(t1, t1_value);
+			if (dirty & /*authList*/ 64 && t1_value !== (t1_value = `${/*auth*/ ctx[15].label}${/*auth*/ ctx[15].optional ? " (Optional)" : ""}` + "")) set_data(t1, t1_value);
 		},
 		d(detaching) {
 			if (detaching) detach(li);
@@ -1301,6 +1301,7 @@ function instance($$self, $$props, $$invalidate) {
 	let { url_of_get_challenge = "" } = $$props;
 	let { url_of_submit_response = "" } = $$props;
 	let { show_vc_list = "true" } = $$props;
+	let { action = "0" } = $$props;
 	let { test = "false" } = $$props;
 	const compoent = get_current_component();
 	const dispatcher = createEventDispatcher();
@@ -1316,7 +1317,7 @@ function instance($$self, $$props, $$invalidate) {
 	const showDialog = async () => {
 		try {
 			$$invalidate(4, isDialogShowing = true);
-			const request = createAuthRequest(0);
+			const request = createAuthRequest(Number(action));
 			const challenge = await postRequest(url_of_get_challenge, request);
 
 			if (challenge.VCFilters) {
@@ -1352,6 +1353,7 @@ function instance($$self, $$props, $$invalidate) {
 		if ('url_of_get_challenge' in $$props) $$invalidate(0, url_of_get_challenge = $$props.url_of_get_challenge);
 		if ('url_of_submit_response' in $$props) $$invalidate(1, url_of_submit_response = $$props.url_of_submit_response);
 		if ('show_vc_list' in $$props) $$invalidate(2, show_vc_list = $$props.show_vc_list);
+		if ('action' in $$props) $$invalidate(10, action = $$props.action);
 		if ('test' in $$props) $$invalidate(3, test = $$props.test);
 	};
 
@@ -1365,7 +1367,8 @@ function instance($$self, $$props, $$invalidate) {
 		authList,
 		showDialog,
 		closeHandler,
-		testScan
+		testScan,
+		action
 	];
 }
 
@@ -1388,6 +1391,7 @@ class OntLogin extends SvelteElement {
 				url_of_get_challenge: 0,
 				url_of_submit_response: 1,
 				show_vc_list: 2,
+				action: 10,
 				test: 3
 			},
 			null
@@ -1406,7 +1410,13 @@ class OntLogin extends SvelteElement {
 	}
 
 	static get observedAttributes() {
-		return ["url_of_get_challenge", "url_of_submit_response", "show_vc_list", "test"];
+		return [
+			"url_of_get_challenge",
+			"url_of_submit_response",
+			"show_vc_list",
+			"action",
+			"test"
+		];
 	}
 
 	get url_of_get_challenge() {
@@ -1433,6 +1443,15 @@ class OntLogin extends SvelteElement {
 
 	set show_vc_list(show_vc_list) {
 		this.$$set({ show_vc_list });
+		flush();
+	}
+
+	get action() {
+		return this.$$.ctx[10];
+	}
+
+	set action(action) {
+		this.$$set({ action });
 		flush();
 	}
 
