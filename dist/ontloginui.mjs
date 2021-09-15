@@ -838,13 +838,14 @@ var Action;
     Action[Action["IdAuth"] = 0] = "IdAuth";
     Action[Action["IdAuthAndVcAuth"] = 1] = "IdAuthAndVcAuth";
 })(Action || (Action = {}));
-var Error$1;
-(function (Error) {
-    Error["VersionNotSupport"] = "ERR_WRONG_VERSION";
-    Error["TypeNotSupport"] = "ERR_TYPE_NOT_SUPPORTED";
-    Error["ActionNotSupport"] = "ERR_ACTION_NOT_SUPPORTED";
-    Error["UnknownError"] = "ERR_UNDEFINED";
-})(Error$1 || (Error$1 = {}));
+var ErrorEnum;
+(function (ErrorEnum) {
+    ErrorEnum["VersionNotSupport"] = "ERR_WRONG_VERSION";
+    ErrorEnum["TypeNotSupport"] = "ERR_TYPE_NOT_SUPPORTED";
+    ErrorEnum["ActionNotSupport"] = "ERR_ACTION_NOT_SUPPORTED";
+    ErrorEnum["UnknownError"] = "ERR_UNDEFINED";
+    ErrorEnum["UserCanceled"] = "USER_CANCELED";
+})(ErrorEnum || (ErrorEnum = {}));
 var QrStatus;
 (function (QrStatus) {
     QrStatus[QrStatus["Pending"] = 0] = "Pending";
@@ -866,10 +867,12 @@ var RequestUrl;
  * @typeParam T Response type.
  * @param url Request url.
  * @param body Request body.
+ * @param signal AbortSignal for cancel request.
  * @return Promise response.
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-const postRequest = async (url, body) => {
+const postRequest = async (url, 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any
+body, signal) => {
     return fetch(url, {
         method: "post",
         body: JSON.stringify(body),
@@ -877,6 +880,7 @@ const postRequest = async (url, body) => {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
+        signal,
     }).then((res) => res.json());
 };
 /**
@@ -884,10 +888,11 @@ const postRequest = async (url, body) => {
  * @typeParam T Response type.
  * @param url Request url.
  * @param path Request path i.e. 'id' or 'news/id'.
+ * @param signal AbortSignal for cancel request.
  * @return Promise response.
  */
-const getRequest = async (url, path) => {
-    return fetch(`${url}/${path}`).then((res) => res.json());
+const getRequest = async (url, path, signal) => {
+    return fetch(`${url}/${path}`, { signal }).then((res) => res.json());
 };
 /**
  * Async wait some time.
@@ -936,6 +941,8 @@ const requestQR = async (challenge) => {
         text: result.qrCode,
     };
 };
+let isQueryCanceled = false;
+let abortController = null;
 /**
  * Query QR result from ontlogin QR server until get result or error.
  * @param id - QR id.
@@ -943,18 +950,41 @@ const requestQR = async (challenge) => {
  * @return The AuthResponse for submit to server.
  */
 const queryQRResult = async (id, duration = 1000) => {
-    const { result, error, desc } = await getRequest(RequestUrl.getQRResult, id);
-    if (error) {
-        throw new Error(desc);
+    if (isQueryCanceled) {
+        isQueryCanceled = false;
+        abortController = null;
+        throw new Error(ErrorEnum.UserCanceled);
     }
-    if (result.state === QrStatus.Pending) {
-        await wait(duration);
-        return queryQRResult(id);
+    try {
+        abortController = new AbortController();
+        const { result, error, desc } = await getRequest(RequestUrl.getQRResult, id, abortController.signal);
+        if (error) {
+            throw new Error(desc);
+        }
+        if (result.state === QrStatus.Pending) {
+            await wait(duration);
+            return queryQRResult(id);
+        }
+        if (result.state === QrStatus.Success) {
+            return JSON.parse(result.clientResponse);
+        }
+        throw new Error(result.error);
     }
-    if (result.state === QrStatus.Success) {
-        return JSON.parse(result.clientResponse);
+    catch (err) {
+        if (err.name === "AbortError") {
+            isQueryCanceled = false;
+            abortController = null;
+            throw new Error(ErrorEnum.UserCanceled);
+        }
+        throw err;
     }
-    throw new Error(result.error);
+};
+/**
+ * Stop query QR result
+ */
+const cancelQueryQRResult = () => {
+    isQueryCanceled = true;
+    abortController?.abort();
 };
 
 // eslint-disable-next-line import/prefer-default-export
@@ -981,7 +1011,7 @@ function get_each_context(ctx, list, i) {
 	return child_ctx;
 }
 
-// (76:0) {#if isDialogShowing}
+// (81:0) {#if isDialogShowing}
 function create_if_block(ctx) {
 	let div6;
 	let div5;
@@ -1109,7 +1139,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (88:10) {#if test === "true"}
+// (93:10) {#if test === "true"}
 function create_if_block_2(ctx) {
 	let button;
 	let mounted;
@@ -1138,7 +1168,7 @@ function create_if_block_2(ctx) {
 	};
 }
 
-// (94:8) {#if show_vc_list === "true" && authList.length}
+// (99:8) {#if show_vc_list === "true" && authList.length}
 function create_if_block_1(ctx) {
 	let ul;
 	let each_value = /*authList*/ ctx[6];
@@ -1196,7 +1226,7 @@ function create_if_block_1(ctx) {
 	};
 }
 
-// (96:12) {#each authList as auth}
+// (101:12) {#each authList as auth}
 function create_each_block(ctx) {
 	let li;
 	let div0;
@@ -1336,13 +1366,16 @@ function instance($$self, $$props, $$invalidate) {
 			dispatch("success", result, compoent, dispatcher);
 			hideDialog();
 		} catch(e) {
-			dispatch("error", e, compoent, dispatcher);
+			if (e.message != ErrorEnum.UserCanceled) {
+				dispatch("error", e, compoent, dispatcher);
+			}
 		}
 	};
 
 	const closeHandler = () => {
-		dispatch("cancel", null, compoent, dispatcher);
+		cancelQueryQRResult();
 		hideDialog();
+		dispatch("cancel", null, compoent, dispatcher);
 	};
 
 	const testScan = () => {

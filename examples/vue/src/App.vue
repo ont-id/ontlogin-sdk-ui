@@ -7,6 +7,9 @@ const successHandler = (e) => {
 const errorHandler = (e) => {
   console.log("fail", e.detail);
 };
+const cancelHandler = (e) => {
+  console.log("cancelHandler", e.detail);
+};
 </script>
 
 <template>
@@ -20,6 +23,7 @@ const errorHandler = (e) => {
         action="1"
         @success="successHandler"
         @error="errorHandler"
+        @cancel="cancelHandler"
       />
     </div>
   </div>

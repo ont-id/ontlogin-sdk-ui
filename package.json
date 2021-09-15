@@ -1,6 +1,6 @@
 {
   "name": "ontlogin-ui",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "svelte": "src/ontloginui.js",
   "module": "dist/ontloginui.mjs",
   "main": "dist/ontloginui.js",
@@ -46,7 +46,7 @@
     "dist"
   ],
   "dependencies": {
-    "ontlogin": "^0.0.6",
+    "ontlogin": "^0.0.7",
     "qrcode-svg": "^1.1.0",
     "svelte": "^3.42.5"
   }

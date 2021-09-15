@@ -11,6 +11,8 @@
     postRequest,
     requestQR,
     queryQRResult,
+    cancelQueryQRResult,
+    ErrorEnum,
   } from "ontlogin";
   import { dispatch } from "./utils";
   import { get_current_component } from "svelte/internal";
@@ -56,13 +58,16 @@
       dispatch("success", result, compoent, dispatcher);
       hideDialog();
     } catch (e) {
-      dispatch("error", e, compoent, dispatcher);
+      if (e.message != ErrorEnum.UserCanceled) {
+        dispatch("error", e, compoent, dispatcher);
+      }
     }
   };
 
   const closeHandler = () => {
-    dispatch("cancel", null, compoent, dispatcher);
+    cancelQueryQRResult();
     hideDialog();
+    dispatch("cancel", null, compoent, dispatcher);
   };
 
   const testScan = () => {
