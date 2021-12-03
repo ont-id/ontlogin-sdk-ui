@@ -3,7 +3,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import { terser } from "rollup-plugin-terser";
 import image from "@rollup/plugin-image";
 import commonjs from "@rollup/plugin-commonjs";
-import nodePolyfills from "rollup-plugin-node-polyfills";
+import nodePolyfills from "rollup-plugin-node-polyfills"; // todo rollup-plugin-polyfill-node
 import pkg from "./package.json";
 import preprocessConfig from "./svelte.config";
 
